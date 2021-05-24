@@ -9,6 +9,23 @@ from core.roles import Role
 class User(AbstractUser):
     role = models.CharField(max_length=30, choices=Role.as_choices(), null=True)
 
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+
+        try:
+            Rating.objects.get(user=self)
+        except Rating.DoesNotExist:
+            Rating.objects.create(user=self)
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='rating')
+    rating = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'

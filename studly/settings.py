@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = os.path.dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,7 +38,8 @@ PROJECT_APPS = [
     'auth',
     'teachers',
     'students',
-    'tests'
+    'lessons',
+    'course'
 ]
 
 INSTALLED_APPS = [
@@ -135,7 +138,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+PUBLIC_DIR = os.path.join(PROJECT_DIR, 'public')
+
+STATIC_ROOT = os.path.join(PUBLIC_DIR, 'static')
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(PUBLIC_DIR, 'media')
+MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

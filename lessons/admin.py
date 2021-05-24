@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from tests.models import Test, Task, Variant, Assignment
+from lessons.models import Lesson, Task, Variant, Assignment, LessonAttachments
 
 
-@admin.register(Test)
+@admin.register(Lesson)
 class TestAdmin(admin.ModelAdmin):
     pass
 
@@ -23,3 +23,7 @@ class VariantAdmin(admin.ModelAdmin):
 class TestAssignmentAdmin(admin.ModelAdmin):
     exclude = ('status', )
 
+
+@admin.register(LessonAttachments)
+class TestAttachmentsAdmin(admin.ModelAdmin):
+    pass

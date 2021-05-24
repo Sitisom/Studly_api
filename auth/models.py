@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
-    def authenticate(self, request): # it will return user object
+    def authenticate(self, request):
         try:
             token = get_authorization_header(request).decode('utf-8')
             if token is None or token == "null" or token.strip() == "":

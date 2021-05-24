@@ -3,14 +3,12 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
-from tests.models import Assignment, AssignmentStatuses, TaskAnswer
-from tests.serializers import AssignmentsSerializer
-
-
-class TestsModelViewSet(ModelViewSet):
-    pass
+from core.models import Rating
+from lessons.models import Assignment, Statuses, TaskAnswer
+from lessons.serializers import AssignmentsSerializer
 
 
 class TestAssignmentsViewSet(GenericViewSet,
@@ -25,27 +23,33 @@ class TestAssignmentsViewSet(GenericViewSet,
         qs = Assignment.objects.filter(student=self.request.user.student_profile)
 
         if self.action == 'list':
-            qs = qs.filter(status=AssignmentStatuses.UNDONE.value)
+            qs = qs.filter(status=Statuses.UNDONE.value)
 
         return qs
 
 
 class TaskAnswerModelViewSet(GenericViewSet,
                              mixins.UpdateModelMixin):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = ()
 
     def get_queryset(self):
         return TaskAnswer.objects.filter(student=self.request.user.student_profile)
 
     def get_object(self):
-        return TaskAnswer.objects.get_or_create(student=self.request.user.student_profile,
-                                                task_id=self.request.POST.get('task_id', None))
+        task, _ = TaskAnswer.objects.get_or_create(student=self.request.user.student_profile,
+                                                task_id=self.request.POST.get('taskId'))
+        return task
 
     def update(self, request, *args, **kwargs):
         obj = self.get_object()
-        max_points = 100 / obj.task.test.tasks.count()
+        max_points = 100 / obj.task.lesson.tasks.count()
 
         obj.answer = self.request.POST.get('answer', None)
-        obj.point = max_points if obj.answer == obj.task.right_answer else 0
-
+        obj.points = max_points if obj.answer == obj.task.right_answer else 0
         obj.save()
+
+        rating = Rating.objects.get(user=self.request.user)
+        rating.rating += obj.points
+        rating.save()
+
+        return Response({'detail': 'success', 'points': obj.points}, status=200)
