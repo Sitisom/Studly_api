@@ -5,7 +5,7 @@ from lessons.models import Lesson, Task, Variant, Assignment, LessonAttachments
 
 
 @admin.register(Lesson)
-class TestAdmin(admin.ModelAdmin):
+class LessonAdmin(admin.ModelAdmin):
     pass
 
 
@@ -20,10 +20,10 @@ class VariantAdmin(admin.ModelAdmin):
 
 
 @admin.register(Assignment)
-class TestAssignmentAdmin(admin.ModelAdmin):
+class AssignmentAdmin(admin.ModelAdmin):
     exclude = ('status', )
 
 
 @admin.register(LessonAttachments)
-class TestAttachmentsAdmin(admin.ModelAdmin):
+class LessonAttachmentsAdmin(admin.ModelAdmin):
     pass

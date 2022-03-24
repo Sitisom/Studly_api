@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import django.db.models
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = os.path.dirname(__file__)
@@ -29,6 +30,8 @@ SECRET_KEY = ')-)_&s!_%ym(8(_lc92qbj-56*=6k%pex$k9yrmuxsu7@_w*0$'
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 # Application definition

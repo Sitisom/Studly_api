@@ -1,14 +1,12 @@
 from rest_framework import routers
 
-from lessons.views import TestAssignmentsViewSet, TaskAnswerModelViewSet
+from lessons.views import AssignmentsViewSet, TaskAnswerModelViewSet
 
 router = routers.DefaultRouter()
 
-router.register('assignments', TestAssignmentsViewSet, 'assignments')
+router.register('assignments', AssignmentsViewSet, 'assignments')
 router.register('task', TaskAnswerModelViewSet, 'task')
 
-urlpatterns = [
-
-]
+urlpatterns = []
 
 urlpatterns += router.urls

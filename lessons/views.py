@@ -11,9 +11,9 @@ from lessons.models import Assignment, Statuses, TaskAnswer
 from lessons.serializers import AssignmentsSerializer
 
 
-class TestAssignmentsViewSet(GenericViewSet,
-                             mixins.ListModelMixin,
-                             mixins.RetrieveModelMixin):
+class AssignmentsViewSet(GenericViewSet,
+                         mixins.ListModelMixin,
+                         mixins.RetrieveModelMixin):
     permission_classes = (IsAuthenticated, )
 
     def get_serializer_class(self):
@@ -37,7 +37,7 @@ class TaskAnswerModelViewSet(GenericViewSet,
 
     def get_object(self):
         task, _ = TaskAnswer.objects.get_or_create(student=self.request.user.student_profile,
-                                                task_id=self.request.POST.get('taskId'))
+                                                   task_id=self.request.POST.get('taskId'))
         return task
 
     def update(self, request, *args, **kwargs):

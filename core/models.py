@@ -6,6 +6,11 @@ from django.db import models
 from core.roles import Role
 
 
+class DefaultAbstractFields(models.Model):
+    created_at = models.DateTimeField("Время создания", auto_created=True)
+    updated_at = models.DateTimeField("Время обновления", auto_now_add=True)
+
+
 class User(AbstractUser):
     role = models.CharField(max_length=30, choices=Role.as_choices(), null=True)
 
