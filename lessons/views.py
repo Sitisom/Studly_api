@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from core.models import Rating
-from lessons.models import Assignment, Statuses, TaskAnswer
+from lessons.models import Assignment, Statuses, Answer
 from lessons.serializers import AssignmentsSerializer
 
 
@@ -33,10 +33,10 @@ class TaskAnswerModelViewSet(GenericViewSet,
     permission_classes = ()
 
     def get_queryset(self):
-        return TaskAnswer.objects.filter(student=self.request.user.student_profile)
+        return Answer.objects.filter(student=self.request.user.student_profile)
 
     def get_object(self):
-        task, _ = TaskAnswer.objects.get_or_create(student=self.request.user.student_profile,
+        task, _ = Answer.objects.get_or_create(student=self.request.user.student_profile,
                                                    task_id=self.request.POST.get('taskId'))
         return task
 

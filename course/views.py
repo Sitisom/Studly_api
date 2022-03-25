@@ -8,7 +8,7 @@ from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from course.models import Course, CourseSubscription
+from course.models import Course, Subscription
 from course.serializers import CourseSerializer
 
 
@@ -28,7 +28,7 @@ class CourseViewSet(viewsets.GenericViewSet,
     @action(methods=['POST'], detail=False)
     def subscribe(self, request, *args, **kwargs):
         course = Course.objects.get(id=self.request.POST.get('courseID'))
-        CourseSubscription.objects.create(
+        Subscription.objects.create(
             user=self.request.user,
             course=course,
             date=datetime.now()

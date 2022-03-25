@@ -4,8 +4,8 @@ from django.db import models
 from core.models import User
 
 
-class Student(models.Model):
-    user = models.OneToOneField(User, models.CASCADE, 'student_profile', null=True)
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, models.CASCADE, null=True)
 
     def __str__(self):
         return self.user.username

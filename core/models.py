@@ -14,14 +14,6 @@ class DefaultAbstractFields(models.Model):
 class User(AbstractUser):
     role = models.CharField(max_length=30, choices=Role.as_choices(), null=True)
 
-    def save(self, *args, **kwargs):
-        super(User, self).save(*args, **kwargs)
-
-        try:
-            Rating.objects.get(user=self)
-        except Rating.DoesNotExist:
-            Rating.objects.create(user=self)
-
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'

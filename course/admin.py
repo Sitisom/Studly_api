@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from course.models import Course, Difficulty, Subject, CourseSubscription
+from course.models import Course, Difficulty, Subject, Subscription
 
 
 @admin.register(Course)
@@ -24,9 +24,9 @@ class SubjectAdmin(admin.ModelAdmin):
         fields = '__all__'
 
 
-@admin.register(CourseSubscription)
+@admin.register(Subscription)
 class CourseSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('course', )
+    list_display = ('rate_plan', )
 
     class Meta:
         fields = '__all__'

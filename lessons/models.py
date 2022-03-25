@@ -1,9 +1,12 @@
 from enum import Enum
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
+from core.models import User
+from core.roles import Role
 from course.models import Course
-from students.models import Student
+from students.models import StudentProfile
 
 
 class Statuses(Enum):
@@ -63,8 +66,8 @@ class TaskVariantThroughModel(models.Model):
 
 class Task(models.Model):
     lesson = models.ForeignKey(Lesson, models.SET_NULL, "tasks", null=True)
-    question = models.CharField("Вопрос", max_length=300)
-    type = models.CharField("Тип задания", choices=TaskType.as_choices())
+    question = models.TextField("Вопрос", null=True, blank=True)
+    type = models.CharField("Тип задания", choices=TaskType.as_choices(), max_length=16, default=TaskType.TEST.value)
 
     variants = models.ManyToManyField(Variant, through=TaskVariantThroughModel)
 
@@ -77,23 +80,25 @@ class Task(models.Model):
 
 
 class Assignment(models.Model):
-    student = models.ForeignKey(Student, models.SET_NULL, null=True, verbose_name='Студент')
-    lesson = models.ForeignKey(Lesson, models.CASCADE, "assignments", verbose_name='Урок')
-
+    user = models.ForeignKey(User, models.SET_NULL, null=True, verbose_name='Студент',
+                             limit_choices_to={'role': Role.STUDENT.value})
+    lesson = models.ForeignKey(Lesson, models.CASCADE, "assignments", verbose_name='Урок', null=True)
     status = models.CharField("Статус", choices=Statuses.as_choices(), default=Statuses.UNDONE.value, max_length=120)
 
     def __str__(self):
-        return 'Тест %s для ученика %s' % (self.lesson, self.student)
+        return 'Тест %s для ученика %s' % (self.lesson, self.user)
 
     class Meta:
         verbose_name = "Назначение задания"
         verbose_name_plural = "Назначения заданий"
 
 
-class TaskAnswer(models.Model):
-    student = models.ForeignKey(Student, models.CASCADE, null=True, verbose_name="Студент")
+class Answer(models.Model):
+    user = models.ForeignKey(User, models.CASCADE, null=True, verbose_name="Студент",
+                             limit_choices_to={'role': Role.STUDENT.value})
     task = models.ForeignKey(Task, models.CASCADE, "answers", null=True, verbose_name="Задача")
     answer = models.TextField("Ответ")
+    answers = models.ManyToManyField(Variant)
     points = models.FloatField("Количество баллов", default=0)
 
     class Meta:
@@ -102,13 +107,17 @@ class TaskAnswer(models.Model):
 
 
 class LessonAttachments(models.Model):
-    lesson = models.ForeignKey(Lesson, models.CASCADE, "attachments", verbose_name="Урок")
-    text = models.TextField("Текст", null=True)
-    file = models.FileField("Файл", null=True, upload_to="attachments/files/")
-    video_url = models.URLField("Ссылка на видео", null=True)
+    lesson = models.ForeignKey(Lesson, models.CASCADE, "attachments", verbose_name="Урок", null=True)
+    text = models.TextField("Текст", null=True, blank=True)
+    file = models.FileField("Файл", null=True, blank=True, upload_to="attachments/files/")
+    video_url = models.URLField("Ссылка на видео", null=True, blank=True)
 
     def __str__(self):
         return f"{self.id}"
+
+    def clean(self):
+        if not self.text and not self.file and not self.video_url:
+            raise ValidationError("Что-то должно быть добавлено")
 
     class Meta:
         verbose_name = "Дополнение к тесту"

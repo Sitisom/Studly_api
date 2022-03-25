@@ -27,12 +27,18 @@ class Subject(models.Model):
 
 class RatePlan(models.Model):
     title = models.CharField("Название тарифа", max_length=128)
+    price = models.PositiveSmallIntegerField("Цена", default=0)
+    order = models.PositiveSmallIntegerField("Порядок", default=0)
+
+    class Meta:
+        verbose_name = "Тариф"
+        verbose_name_plural = "Тарифы"
 
 
 class Course(models.Model):
     title = models.CharField(max_length=128)
     teacher = models.ForeignKey(User, models.SET_NULL, "courses", null=True, verbose_name="Учитель")
-    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "courses")
+    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "courses", null=True)
 
     difficulty = models.ForeignKey(Difficulty, models.SET_NULL, "courses", null=True, verbose_name="Сложность")
     subject = models.ForeignKey(Subject, models.SET_NULL, "courses", null=True, verbose_name="Предмет")
@@ -48,15 +54,14 @@ class Course(models.Model):
 
 
 class Subscription(DefaultAbstractFields):
-    user = models.ForeignKey(User, models.CASCADE, null=True)
-    course = models.ForeignKey(Course, models.CASCADE, "subscriptions", null=True, )
-    date = models.DateField("Дата подписки")
+    user = models.ForeignKey(User, models.CASCADE, "subscriptions", null=True)
+    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "subscriptions", null=True)
     is_valid = models.BooleanField("Валидна?", default=False)
 
     def __str__(self):
-        return f'Покупка {self.user.username} - {self.course}'
+        return f'Подписка {self.user.username} - {self.rate_plan.title}'
 
     class Meta:
-        unique_together = ("user", "course")
-        verbose_name = "Подписка на курс"
-        verbose_name_plural = "Подписки на курсы"
+        unique_together = ("user", "rate_plan")
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
