@@ -12,17 +12,18 @@ class DefaultAbstractFields(models.Model):
 
 
 class User(AbstractUser):
-    role = models.CharField(max_length=30, choices=Role.as_choices(), null=True)
+    role = models.CharField("Роль", max_length=30, choices=Role.as_choices(), default=Role.STUDENT.value)
+    avatar = models.ImageField("Аватар", null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
 
 
 class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='rating')
-    rating = models.IntegerField(default=0)
+    user = models.ForeignKey(User, models.CASCADE, "rating", null=True)
+    rating = models.IntegerField("Рейтинг", default=0)
 
     class Meta:
-        verbose_name = 'Рейтинг'
-        verbose_name_plural = 'Рейтинги'
+        verbose_name = "Рейтинг"
+        verbose_name_plural = "Рейтинги"

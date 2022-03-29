@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class Role(Enum):
-    STUDENT = "STUDENT_ROLE"
-    TEACHER = "TEACHER_ROLE"
+    STUDENT = "STUDENT"
+    TEACHER = "TEACHER"
 
     @classmethod
     def as_choices(cls):

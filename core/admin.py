@@ -8,7 +8,7 @@ from gettext import gettext as _
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'first_name', 'last_name', 'email')}),
+        (None, {'fields': ('username', 'first_name', 'last_name', 'email', 'role')}),
         (_('Permissions'), {'fields': ('is_superuser', 'is_staff', 'is_active')}),
         (_('Dates'), {'fields': ('last_login', 'date_joined')})
     )

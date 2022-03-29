@@ -15,3 +15,21 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = '__all__'
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    subscription = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_subscription(obj):
+        from course.serializers import SubscriptionSerializer
+        subscription = obj.subscriptions.filter(is_valid=True).first()
+
+        if subscription:
+            return SubscriptionSerializer(subscription).data
+        else:
+            return None
+
+    class Meta:
+        model = User
+        fields = ('role', 'subscription')
