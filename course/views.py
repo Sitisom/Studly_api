@@ -8,8 +8,8 @@ from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from course.models import Course, Subscription
-from course.serializers import CourseSerializer
+from course.models import Course, Subscription, RatePlan
+from course.serializers import CourseSerializer, RatePlanSerializer
 
 
 class CourseViewSet(viewsets.GenericViewSet,
@@ -52,3 +52,10 @@ class CourseViewSet(viewsets.GenericViewSet,
         if self.action == 'buy':
             qs = self.buy_queryset(qs)
         return qs
+
+
+class RatePlanViewSet(viewsets.ModelViewSet):
+    serializer_class = RatePlanSerializer
+
+    def get_queryset(self):
+        return RatePlan.objects.filter(is_active=True)

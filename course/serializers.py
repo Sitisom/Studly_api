@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.serializers import UserSerializer
-from course.models import Course, Difficulty, Subject, Subscription
+from course.models import Course, Difficulty, Subject, Subscription, RatePlan
 from lessons.models import Statuses
 from lessons.serializers import LessonSerializer
 
@@ -40,4 +40,10 @@ class CourseSerializer(serializers.ModelSerializer):
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
+        fields = '__all__'
+
+
+class RatePlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RatePlan
         fields = '__all__'

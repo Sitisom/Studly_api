@@ -25,25 +25,27 @@ class Subject(models.Model):
         verbose_name_plural = "Предметы"
 
 
-class RatePlan(models.Model):
+class RatePlan(DefaultAbstractFields):
     title = models.CharField("Название тарифа", max_length=128)
     price = models.PositiveSmallIntegerField("Цена", default=0)
     order = models.PositiveSmallIntegerField("Порядок", default=0)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
+        ordering = ["order", ]
         verbose_name = "Тариф"
         verbose_name_plural = "Тарифы"
 
 
-class Course(models.Model):
+class Course(DefaultAbstractFields):
     title = models.CharField(max_length=128)
     teacher = models.ForeignKey(User, models.SET_NULL, "courses", null=True, verbose_name="Учитель")
     rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "courses", null=True)
 
     difficulty = models.ForeignKey(Difficulty, models.SET_NULL, "courses", null=True, verbose_name="Сложность")
     subject = models.ForeignKey(Subject, models.SET_NULL, "courses", null=True, verbose_name="Предмет")
-
-    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.title} - {self.subject}'
