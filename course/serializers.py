@@ -44,6 +44,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 
 class RatePlanSerializer(serializers.ModelSerializer):
+    current = serializers.BooleanField()
+
     class Meta:
         model = RatePlan
-        fields = '__all__'
+        fields = ["id", "title", "price", "order", "current", ]
+
+
+class PurchaseSerializer(serializers.Serializer):
+    id = serializers.IntegerField(min_value=0)
+    price = serializers.IntegerField(min_value=0)

@@ -3,7 +3,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from core.models import User
+from core.models import User, DefaultAbstractFields
 from core.roles import Role
 from course.models import Course
 from students.models import StudentProfile
@@ -21,7 +21,7 @@ class Statuses(Enum):
         )
 
 
-class Lesson(models.Model):
+class Lesson(DefaultAbstractFields):
     title = models.CharField("Название", max_length=128, default='')
     course = models.ForeignKey(Course, models.CASCADE, "lessons", null=True)
 
@@ -47,7 +47,7 @@ class TaskType(Enum):
         )
 
 
-class Variant(models.Model):
+class Variant(DefaultAbstractFields):
     text = models.CharField("Текст", max_length=150, null=True)
 
     def __str__(self):
@@ -58,13 +58,13 @@ class Variant(models.Model):
         verbose_name_plural = "Варианты"
 
 
-class TaskVariantThroughModel(models.Model):
+class TaskVariantThroughModel(DefaultAbstractFields):
     task = models.ForeignKey("Task", models.CASCADE, )
     variant = models.ForeignKey(Variant, models.CASCADE)
     is_right = models.BooleanField(default=False)
 
 
-class Task(models.Model):
+class Task(DefaultAbstractFields):
     lesson = models.ForeignKey(Lesson, models.SET_NULL, "tasks", null=True)
     question = models.TextField("Вопрос", null=True, blank=True)
     type = models.CharField("Тип задания", choices=TaskType.as_choices(), max_length=16, default=TaskType.TEST.value)
@@ -79,7 +79,7 @@ class Task(models.Model):
         verbose_name_plural = "Задания"
 
 
-class Assignment(models.Model):
+class Assignment(DefaultAbstractFields):
     user = models.ForeignKey(User, models.SET_NULL, null=True, verbose_name='Студент',
                              limit_choices_to={'role': Role.STUDENT.value})
     lesson = models.ForeignKey(Lesson, models.CASCADE, "assignments", verbose_name='Урок', null=True)
@@ -93,7 +93,7 @@ class Assignment(models.Model):
         verbose_name_plural = "Назначения заданий"
 
 
-class Answer(models.Model):
+class Answer(DefaultAbstractFields):
     user = models.ForeignKey(User, models.CASCADE, null=True, verbose_name="Студент",
                              limit_choices_to={'role': Role.STUDENT.value})
     task = models.ForeignKey(Task, models.CASCADE, "answers", null=True, verbose_name="Задача")
@@ -106,7 +106,7 @@ class Answer(models.Model):
         verbose_name_plural = "Ответы на задание"
 
 
-class LessonAttachments(models.Model):
+class LessonAttachments(DefaultAbstractFields):
     lesson = models.ForeignKey(Lesson, models.CASCADE, "attachments", verbose_name="Урок", null=True)
     text = models.TextField("Текст", null=True, blank=True)
     file = models.FileField("Файл", null=True, blank=True, upload_to="attachments/files/")

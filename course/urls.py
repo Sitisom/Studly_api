@@ -4,6 +4,6 @@ from course.views import CourseViewSet, RatePlanViewSet
 
 router = routers.DefaultRouter()
 router.register("", CourseViewSet, "courses")
-router.register("plan", RatePlanViewSet, "plan")
+router.register("rate-plan", RatePlanViewSet, "rate-plan")
 
 urlpatterns = [] + router.urls

@@ -1,11 +1,11 @@
 from django.db import models
 
 # Create your models here.
-from core.models import User
+from core.models import User, DefaultAbstractFields
 
 
-class StudentProfile(models.Model):
-    user = models.OneToOneField(User, models.CASCADE, null=True)
+class StudentProfile(DefaultAbstractFields):
+    user = models.OneToOneField(User, models.CASCADE, null=True, verbose_name="Пользователь")
 
     def __str__(self):
         return self.user.username

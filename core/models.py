@@ -12,7 +12,10 @@ class DefaultAbstractFields(models.Model):
     created_at = models.DateTimeField("Время создания", auto_now=True, blank=True)
     updated_at = models.DateTimeField("Время обновления", auto_now_add=True, blank=True)
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField("Активно?", default=True)
+
+    class Meta:
+        abstract = True
 
 
 class User(AbstractUser):
@@ -28,7 +31,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
 
-class Rating(models.Model):
+class Rating(DefaultAbstractFields):
     user = models.ForeignKey(User, models.CASCADE, "rating", null=True)
     rating = models.IntegerField("Рейтинг", default=0)
 

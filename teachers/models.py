@@ -1,10 +1,10 @@
 from django.db import models
 
 # Create your models here.
-from core.models import User
+from core.models import User, DefaultAbstractFields
 
 
-class TeacherProfile(models.Model):
+class TeacherProfile(DefaultAbstractFields):
     user = models.OneToOneField(User, models.CASCADE, null=True)
 
     def __str__(self):

@@ -3,7 +3,7 @@ from django.db import models
 from core.models import User, DefaultAbstractFields
 
 
-class Difficulty(models.Model):
+class Difficulty(DefaultAbstractFields):
     title = models.CharField("Название", max_length=90)
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Difficulty(models.Model):
         verbose_name_plural = "Сложности курсов"
 
 
-class Subject(models.Model):
+class Subject(DefaultAbstractFields):
     title = models.CharField("Название", max_length=50)
 
     def __str__(self):
@@ -56,14 +56,14 @@ class Course(DefaultAbstractFields):
 
 
 class Subscription(DefaultAbstractFields):
-    user = models.ForeignKey(User, models.CASCADE, "subscriptions", null=True)
-    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "subscriptions", null=True)
+    user = models.ForeignKey(User, models.CASCADE, 'subscriptions', null=True, verbose_name="Пользователь")
+    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "subscriptions", null=True, verbose_name="Тариф")
     is_valid = models.BooleanField("Валидна?", default=False)
 
     def __str__(self):
         return f'Подписка {self.user.username} - {self.rate_plan.title}'
 
     class Meta:
-        unique_together = ("user", "rate_plan")
+        unique_together = ("user", 'is_active')
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
