@@ -1,15 +1,9 @@
 from rest_framework import serializers
 
 from core.serializers import UserSerializer
-from course.models import Course, Difficulty, Subject, Subscription, RatePlan
+from course.models import Course, Subject, Subscription, RatePlan
 from lessons.models import Statuses
 from lessons.serializers import LessonSerializer
-
-
-class DifficultySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Difficulty
-        fields = '__all__'
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -19,7 +13,6 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    difficulty = serializers.CharField(source='difficulty.title')
     subject = serializers.CharField(source='subject.title')
     teacher = UserSerializer()
     lessons = LessonSerializer(many=True)
@@ -30,7 +23,7 @@ class CourseSerializer(serializers.ModelSerializer):
         return obj.lessons.count()
 
     def get_completed_lessons(self, obj):
-        return obj.lessons.filter(lesson_assignment__status=Statuses.DONE.value).count()
+        return obj.lessons.filter(assignments__status=Statuses.DONE.value).count()
 
     class Meta:
         model = Course

@@ -1,19 +1,13 @@
 from django.contrib import admin
 
 # Register your models here.
-from course.models import Course, Difficulty, Subject, Subscription, RatePlan
+from course.models import Course, Subject, Subscription, RatePlan
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'subject', 'difficulty', 'teacher',)
 
-    class Meta:
-        fields = '__all__'
-
-
-@admin.register(Difficulty)
-class DifficultyAdmin(admin.ModelAdmin):
     class Meta:
         fields = '__all__'
 

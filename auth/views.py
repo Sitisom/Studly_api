@@ -15,10 +15,7 @@ class RegisterView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except Exception as e:
-            Response(e, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(True)
         user = self.perform_create(serializer)
 
         refresh = RefreshToken.for_user(user)

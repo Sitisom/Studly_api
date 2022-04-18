@@ -1,17 +1,8 @@
+from enum import Enum
+
 from django.db import models
 
 from core.models import User, DefaultAbstractFields
-
-
-class Difficulty(DefaultAbstractFields):
-    title = models.CharField("Название", max_length=90)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = "Сложность курса"
-        verbose_name_plural = "Сложности курсов"
 
 
 class Subject(DefaultAbstractFields):
@@ -40,11 +31,12 @@ class RatePlan(DefaultAbstractFields):
 
 
 class Course(DefaultAbstractFields):
-    title = models.CharField(max_length=128)
+    title = models.CharField("Название", max_length=128)
+    image = models.ImageField("Картинка", blank=True)
     teacher = models.ForeignKey(User, models.SET_NULL, "courses", null=True, verbose_name="Учитель")
-    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "courses", null=True)
+    rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "courses", null=True, verbose_name="Тариф")
 
-    difficulty = models.ForeignKey(Difficulty, models.SET_NULL, "courses", null=True, verbose_name="Сложность")
+    difficulty = models.PositiveSmallIntegerField("Сложность", default=1, help_text="От 1 до 3")
     subject = models.ForeignKey(Subject, models.SET_NULL, "courses", null=True, verbose_name="Предмет")
 
     def __str__(self):
