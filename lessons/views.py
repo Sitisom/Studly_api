@@ -7,8 +7,19 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from core.models import Rating
-from lessons.models import Assignment, Statuses, Answer
-from lessons.serializers import AssignmentsSerializer
+from lessons.models import Assignment, Statuses, Answer, Lesson
+from lessons.serializers import AssignmentsSerializer, LessonSerializer
+
+
+class LessonViewSet(GenericViewSet,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = LessonSerializer
+    lookup_value_regex = "\d+"
+
+    def get_queryset(self):
+        return Lesson.objects.filter(course__in=self.request.user.student_courses.values('course_id'))
 
 
 class AssignmentsViewSet(GenericViewSet,

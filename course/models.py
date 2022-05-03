@@ -1,8 +1,7 @@
-from enum import Enum
-
 from django.db import models
 
 from core.models import User, DefaultAbstractFields
+from core.roles import Role
 
 
 class Subject(DefaultAbstractFields):
@@ -32,6 +31,7 @@ class RatePlan(DefaultAbstractFields):
 
 class Course(DefaultAbstractFields):
     title = models.CharField("Название", max_length=128)
+    description = models.TextField(null=True, blank=True)
     image = models.ImageField("Картинка", blank=True)
     teacher = models.ForeignKey(User, models.SET_NULL, "courses", null=True, verbose_name="Учитель")
     rate_plan = models.ForeignKey(RatePlan, models.SET_NULL, "courses", null=True, verbose_name="Тариф")
@@ -45,6 +45,21 @@ class Course(DefaultAbstractFields):
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
+
+
+class CourseSubscription(DefaultAbstractFields):
+    user = models.ForeignKey(User, models.CASCADE, 'student_courses', limit_choices_to={'role': Role.STUDENT.value},
+                             verbose_name="Пользователь")
+    course = models.ForeignKey(Course, models.CASCADE, 'courses', verbose_name="Курс")
+
+    class Meta:
+        verbose_name = "Подписка на курс"
+        verbose_name_plural = "Подписки на курсы"
+
+
+class SubscriptionQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(is_active=True, is_valid=True)
 
 
 class Subscription(DefaultAbstractFields):

@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from course.models import Course, Subscription, RatePlan
+from course.models import Course, Subscription, RatePlan, CourseSubscription
 from course.serializers import CourseSerializer, RatePlanSerializer, PurchaseSerializer
 
 
@@ -29,11 +29,10 @@ class CourseViewSet(viewsets.GenericViewSet,
 
     @action(methods=['POST'], detail=False)
     def subscribe(self, request, *args, **kwargs):
-        course = Course.objects.get(id=self.request.POST.get('courseID'))
-        Subscription.objects.create(
+        course = Course.objects.get(id=self.request.data.get('id'))
+        CourseSubscription.objects.create(
             user=self.request.user,
             course=course,
-            date=datetime.now()
         )
         return Response('Created', status=status.HTTP_201_CREATED)
 

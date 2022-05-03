@@ -13,3 +13,4 @@ class UserAdmin(admin.ModelAdmin):
         (_('Dates'), {'fields': ('last_login', 'date_joined')})
     )
     exclude = ('user_permissions', 'groups', )
+

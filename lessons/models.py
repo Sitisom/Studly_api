@@ -21,11 +21,26 @@ class Statuses(Enum):
         )
 
 
-class Lesson(DefaultAbstractFields):
-    title = models.CharField("Название", max_length=128, default='')
-    course = models.ForeignKey(Course, models.CASCADE, "lessons", null=True)
+class Topic(models.Model):
+    title = models.CharField("Название темы", max_length=128)
+    description = models.TextField("Описание", null=True, blank=True)
 
-    status = models.CharField("Статус", max_length=20, choices=Statuses.as_choices(), default=Statuses.UNDONE.value)
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Тема"
+        verbose_name_plural = "Темы"
+
+
+class Lesson(DefaultAbstractFields):
+    course = models.ForeignKey(Course, models.CASCADE, "lessons", null=True, verbose_name="Курс")
+    title = models.CharField("Название", max_length=128, default='')
+    topic = models.ForeignKey(Topic, models.SET_NULL, 'lessons', null=True, verbose_name="Тема урока")
+    description = models.TextField("Описание", null=True, blank=True)
+    image = models.FileField("Картинка для урока", null=True, blank=True)
+    # status = models.CharField("Статус", max_length=20, choices=Statuses.as_choices(), default=Statuses.UNDONE.value,
+    #                           blank=True)
 
     def __str__(self):
         return f'{self.title} - {self.course.title} - {self.course.subject}'

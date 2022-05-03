@@ -38,6 +38,12 @@ class LessonAttachmentsSerializer(serializers.ModelSerializer):
 
 class LessonSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True)
+    image = serializers.SerializerMethodField()
+    topic = serializers.CharField(source='topic.title')
+    course = serializers.CharField(source='course.title')
+
+    def get_image(self, obj):
+        return obj.image.url if obj.image else obj.course.image.url if obj.course else None
 
     class Meta:
         model = Lesson
