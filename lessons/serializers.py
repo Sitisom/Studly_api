@@ -37,6 +37,9 @@ class LessonAttachmentsSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    """
+    Some comment
+    """
     tasks = TaskSerializer(many=True)
     image = serializers.SerializerMethodField()
     topic = serializers.CharField(source='topic.title')
