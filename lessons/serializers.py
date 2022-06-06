@@ -17,10 +17,11 @@ class TaskSerializer(serializers.ModelSerializer):
     points = serializers.SerializerMethodField()
 
     def answer_obj(self, obj):
-        return obj.answers.get_or_create(student=self.context['request'].user.student_profile)[0]
+        answers = obj.answers.filter(user=self.context['request'].user)
+        return answers.first()
 
     def get_given_answer(self, obj):
-        return self.answer_obj(obj).answer
+        return self.answer_obj(obj).answers.first().id
 
     def get_points(self, obj):
         return self.answer_obj(obj).points
@@ -44,6 +45,7 @@ class LessonSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     topic = serializers.CharField(source='topic.title')
     course = serializers.CharField(source='course.title')
+    attachments = LessonAttachmentsSerializer(many=True)
 
     def get_image(self, obj):
         return obj.image.url if obj.image else obj.course.image.url if obj.course else None

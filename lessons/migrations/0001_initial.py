@@ -99,7 +99,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Assignment',
+            name='Submission',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now=True, verbose_name='Время создания')),

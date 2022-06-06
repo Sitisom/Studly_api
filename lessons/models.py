@@ -39,8 +39,8 @@ class Lesson(DefaultAbstractFields):
     topic = models.ForeignKey(Topic, models.SET_NULL, 'lessons', null=True, verbose_name="Тема урока")
     description = models.TextField("Описание", null=True, blank=True)
     image = models.FileField("Картинка для урока", null=True, blank=True)
-    # status = models.CharField("Статус", max_length=20, choices=Statuses.as_choices(), default=Statuses.UNDONE.value,
-    #                           blank=True)
+    status = models.CharField("Статус", max_length=20, choices=Statuses.as_choices(), default=Statuses.UNDONE.value,
+                              blank=True)
 
     def __str__(self):
         return f'{self.title} - {self.course.title} - {self.course.subject}'
@@ -74,9 +74,9 @@ class Variant(DefaultAbstractFields):
 
 
 class TaskVariantThroughModel(DefaultAbstractFields):
-    task = models.ForeignKey("Task", models.CASCADE, )
-    variant = models.ForeignKey(Variant, models.CASCADE)
-    is_right = models.BooleanField(default=False)
+    task = models.ForeignKey("Task", models.CASCADE, verbose_name='Задача')
+    variant = models.ForeignKey(Variant, models.CASCADE, verbose_name='Вариант')
+    is_right = models.BooleanField('Верный?', default=False)
 
 
 class Task(DefaultAbstractFields):
@@ -104,8 +104,8 @@ class Assignment(DefaultAbstractFields):
         return 'Тест %s для ученика %s' % (self.lesson, self.user)
 
     class Meta:
-        verbose_name = "Назначение задания"
-        verbose_name_plural = "Назначения заданий"
+        verbose_name = "Сданный тест"
+        verbose_name_plural = "Сданные тесты"
 
 
 class Answer(DefaultAbstractFields):
